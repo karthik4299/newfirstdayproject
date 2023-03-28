@@ -8,5 +8,7 @@ public class Class {
 	
 public static void main(String[] args) {
 	System.out.println("karthik ");
+	
+	System.out.println("new datas updated");
 }
 }
