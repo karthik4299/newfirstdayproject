@@ -6,28 +6,21 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
-//import org.apache.poi.ss.usermodel.Cell;
-//import org.apache.poi.ss.usermodel.DateUtil;
-//import org.apache.poi.ss.usermodel.Row;
-//import org.apache.poi.ss.usermodel.Sheet;
-//import org.apache.poi.ss.usermodel.Workbook;
-//import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
 
@@ -41,10 +34,11 @@ public class BaseClass {
 
 	public static WebDriver browserlaunch(String browsername) {
 		if (browsername.equalsIgnoreCase("chrome")) {
-
+			ChromeOptions op = new ChromeOptions();
+			op.addArguments("--remote-allow-origins=*");
 			WebDriverManager.chromedriver().setup();
 
-			driver = new ChromeDriver();
+			driver = new ChromeDriver(op);
 		} else if (browsername.equalsIgnoreCase("edge")) {
 			WebDriverManager.edgedriver().setup();
 			driver = new EdgeDriver();
@@ -52,7 +46,7 @@ public class BaseClass {
 		} else if (browsername.equalsIgnoreCase("firefox")) {
 			WebDriverManager.firefoxdriver().setup();
 
-			driver = new FirefoxDriver();
+			// driver = new FirefoxDriver();
 
 		}
 		return driver;
@@ -76,12 +70,6 @@ public class BaseClass {
 	public static void implicityWait(int secs) {
 		driver.manage().timeouts().implicitlyWait(secs, TimeUnit.SECONDS);
 
-	}
-
-	// current url
-	public static String currentUrl() {
-		String url = driver.getCurrentUrl();
-		return url;
 	}
 
 	// sentkeye
@@ -111,6 +99,7 @@ public class BaseClass {
 	// getattribute
 	public static String getAttribute(WebElement e, String value) {
 		String attribute = e.getAttribute(value);
+		System.out.println(attribute);
 		return attribute;
 	}
 
@@ -379,26 +368,8 @@ public class BaseClass {
 		driver.navigate().forward();
 	}
 
-	// isdisplayed
-	public static boolean isDisplaye(WebElement e) {
-		boolean displayed = e.isDisplayed();
-		return displayed;
-	}
-
-//	isenable 
-	public static boolean isenable(WebElement e) {
-		boolean enabled = e.isEnabled();
-		return enabled;
-	}
-
-//	isselect
-	public static boolean isselect(WebElement e) {
-		boolean selected = e.isSelected();
-		return selected;
-	}
-
 	// javaScriptExecutor
-	public static void javascriptExecutorSendkey(WebElement e, String value) {
+	public static void javascriptExecutorSentkey(WebElement e, String value) {
 		JavascriptExecutor jE = (JavascriptExecutor) driver;
 		jE.executeScript("arguments[0].setAttribute('value','" + value + "')", e);
 	}
@@ -425,9 +396,9 @@ public class BaseClass {
 	}
 
 	// windowHandeling
-//
+
 	public static String getWindowHandle() {
-	String parendId = driver.getWindowHandle();
+		String parendId = driver.getWindowHandle();
 		return parendId;
 	}
 
@@ -435,35 +406,111 @@ public class BaseClass {
 		Set<String> allId = driver.getWindowHandles();
 		return allId;
 
-}
+	}
 
-//	public static String getExcel(String filename, String sheet, int row, int c) throws IOException {
-//
-//		File f = new File("C:\\Users\\KARTHIK KUMAR K\\eclipse-workspace\\MavenProject\\src\\test\\resources\\"
-//				+ filename + ".xlsx");
-//		FileInputStream fi = new FileInputStream(f);
-//		Workbook w = new XSSFWorkbook(fi);
-//		Sheet s = w.getSheet(sheet);
-//		Row r = s.getRow(row);
-//		Cell cell = r.getCell(c);
-//		int cellType = cell.getCellType();
-//		String value;
-//		if (cellType == 1) {
-//			value = cell.getStringCellValue();
-//		} else {
-//			if (DateUtil.isCellDateFormatted(cell)) {
-//				Date dc = cell.getDateCellValue();
-//				SimpleDateFormat sd = new SimpleDateFormat("d-MM-yy");
-//				value = sd.format(dc);
-//			} else {
-//				double nv = cell.getNumericCellValue();
-//				long l = (long) nv;
-//				value = String.valueOf(l);
-//
-//			}
-//		}
-//		return value;
-//
-//	}
+	public static String getExcel(String filename, String sheet, int row, int c) throws IOException {
 
+		File f = new File("C:\\Users\\KARTHIK KUMAR K\\eclipse-workspace\\MavenProject\\src\\test\\resources\\"
+				+ filename + ".xlsx");
+		FileInputStream fi = new FileInputStream(f);
+		// Workbook w = new XSSFWorkbook(fi);
+		// Sheet s = w.getSheet(sheet);
+		// Row r = s.getRow(row);
+		// Cell cell = r.getCell(c);
+		// int cellType = cell.getCellType();
+		// String value;
+		// if (cellType == 1) {
+		// value = cell.getStringCellValue();
+		// } else {
+		// if (DateUtil.isCellDateFormatted(cell)) {
+		// Date dc = cell.getDateCellValue();
+		// SimpleDateFormat sd = new SimpleDateFormat("d-MM-yy");
+		// value = sd.format(dc);
+		// } else {
+		// double nv = cell.getNumericCellValue();
+		// long l = (long) nv;
+		// value = String.valueOf(l);
+		//
+		// }
+		// }
+		return sheet;
+
+	}
+
+	// tables
+	public void tables(String b) {
+		List<WebElement> tables = driver.findElements(By.tagName("tables"));
+		WebElement t = tables.get(0);
+
+		// All values
+		String t1 = t.getText();
+
+		// All headings
+		List<WebElement> heads = t.findElements(By.tagName("th"));
+		for (int i = 0; i < heads.size(); i++) {
+			WebElement h = heads.get(i);
+			String t2 = h.getText();
+		}
+
+		// All rows
+
+		List<WebElement> rows = t.findElements(By.tagName("tr"));
+
+		for (int i = 0; i < rows.size(); i++) {
+			WebElement r = rows.get(i);
+			String t3 = r.getText();
+		}
+		// All values
+
+		List<WebElement> values = t.findElements(By.tagName("td"));
+		for (int i = 0; i < values.size(); i++) {
+			WebElement v = values.get(i);
+			String t4 = v.getText();
+		}
+
+		// Heads only in row wise
+		List<WebElement> rows1 = t.findElements(By.tagName("tr"));
+		for (int i = 0; i < rows1.size(); i++) {
+			WebElement r = rows1.get(i);
+			List<WebElement> headsR = r.findElements(By.tagName("th"));
+			for (int j = 0; j < headsR.size(); j++) {
+				WebElement hr = headsR.get(j);
+				String t5 = hr.getText();
+			}
+		}
+
+		// Datas only in row wise
+		List<WebElement> rows2 = t.findElements(By.tagName("tr"));
+		for (int i = 0; i < rows1.size(); i++) {
+			WebElement r1 = rows2.get(i);
+			List<WebElement> datasR = r1.findElements(By.tagName("td"));
+			for (int j = 0; j < datasR.size(); j++) {
+				WebElement hr = datasR.get(j);
+				String t6 = hr.getText();
+			}
+		}
+
+		// Get particular value
+		List<WebElement> rows3 = t.findElements(By.tagName("tr"));
+		for (int i = 0; i < rows3.size(); i++) {
+			WebElement r3 = rows3.get(i);
+			List<WebElement> datas1 = r3.findElements(By.tagName("td"));
+			for (int j = 0; j < datas1.size(); j++) {
+				WebElement hr1 = datas1.get(j);
+				String t7 = hr1.getText();
+				if (t7.equals("qwe")) {
+
+					String text = r3.getText();
+
+					// ways
+
+					// System.out.println(text);
+					// System.out.println("row num...."+i);
+					// System.out.println("row num...."+j);
+
+				}
+
+			}
+		}
+	}
 }
